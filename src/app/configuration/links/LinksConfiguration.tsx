@@ -36,7 +36,9 @@ const LinksConfiguration = ({ className }: LinksConfigurationProps) => {
       </div>
 
       {/* LinkCards go here */}
-      <div>
+      <div className="py-3 gap-y-4 flex flex-col ">
+        <LinkCard />
+        <LinkCard />
         <LinkCard />
       </div>
 

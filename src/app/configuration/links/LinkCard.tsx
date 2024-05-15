@@ -1,13 +1,48 @@
+"use client";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { SelectLabel } from "@/components/ui/select";
+import {
+  Select,
+  SelectItem,
+  SelectLabel,
+  SelectValue,
+} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { Link, List, Trash } from "lucide-react";
+import {
+  SelectContent,
+  SelectGroup,
+  SelectTrigger,
+} from "@radix-ui/react-select";
+import { Facebook, Link, List, Trash } from "lucide-react";
 import React from "react";
 
+const PLTAFORMS = [
+  { label: "Instagram", value: "instagram", icon: undefined },
+  { label: "Facebook", value: "facebook", icon: Facebook },
+  { label: "TikTok", value: "tiktok", icon: undefined },
+  { label: "GitHub", value: "github", icon: undefined },
+  { label: "LinkedIn", value: "linkedin", icon: undefined },
+];
+
 const SelectPlatform = () => {
-  return <div></div>;
+  return (
+    <Select>
+      <SelectTrigger className="w-full items-start justify-start text-start bg-white">
+        <SelectValue placeholder="Select platform" />
+      </SelectTrigger>
+      <SelectContent className="w-full">
+        <SelectGroup>
+          {PLTAFORMS.map((platform) => (
+            <SelectItem key={platform.value} value={platform.value}>
+              {/* {platform.icon && <platform.icon size={15} />} */}
+              <span>{platform.label}</span>
+            </SelectItem>
+          ))}
+        </SelectGroup>
+      </SelectContent>
+    </Select>
+  );
 };
 
 const LinkInput = () => {
@@ -44,7 +79,7 @@ const LinkCard = ({}) => {
           Remove
         </a>
       </div>
-      <div className="flex flex-col gap-y-2">
+      <div className="flex flex-col items-start gap-y-2">
         <SelectPlatform />
         <LinkInput />
       </div>
