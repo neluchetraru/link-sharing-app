@@ -7,36 +7,75 @@ import {
   SelectItem,
   SelectLabel,
   SelectValue,
-} from "@/components/ui/select";
-import { cn } from "@/lib/utils";
-import {
   SelectContent,
   SelectGroup,
   SelectTrigger,
-} from "@radix-ui/react-select";
-import { Facebook, Link, List, Trash } from "lucide-react";
-import React from "react";
+} from "@/components/ui/select";
+import {
+  Facebook,
+  Github,
+  Instagram,
+  Link,
+  Linkedin,
+  List,
+  Trash,
+} from "lucide-react";
+import React, { useState } from "react";
 
-const PLTAFORMS = [
-  { label: "Instagram", value: "instagram", icon: undefined },
-  { label: "Facebook", value: "facebook", icon: Facebook },
-  { label: "TikTok", value: "tiktok", icon: undefined },
-  { label: "GitHub", value: "github", icon: undefined },
-  { label: "LinkedIn", value: "linkedin", icon: undefined },
-];
+const PLATFORMS = [
+  {
+    label: "Instagram",
+    value: "instagram",
+    icon: <Instagram className="w-4 h-4 text-gray-500" />,
+  },
+  {
+    label: "Facebook",
+    value: "facebook",
+    icon: <Facebook className="w-4 h-4 text-gray-500" />,
+  },
+  {
+    label: "TikTok",
+    value: "tiktok",
+    icon: <Facebook className="w-4 h-4 text-gray-500" />,
+  },
+  {
+    label: "GitHub",
+    value: "github",
+    icon: <Github className="w-4 h-4 text-gray-500" />,
+  },
+  {
+    label: "LinkedIn",
+    value: "linkedin",
+    icon: <Linkedin className="w-4 h-4 text-gray-500" />,
+  },
+] as const;
 
 const SelectPlatform = () => {
+  const [selectedPlatform, setSelectedPlatform] = useState<
+    (typeof PLATFORMS)[number] | undefined
+  >();
   return (
-    <Select>
-      <SelectTrigger className="w-full items-start justify-start text-start bg-white">
-        <SelectValue placeholder="Select platform" />
+    <Select
+      onValueChange={(value) =>
+        setSelectedPlatform(
+          PLATFORMS.find((platform) => platform.value === value)!
+        )
+      }
+    >
+      <Label className="text-xs text-gray-600">Platform</Label>
+      <SelectTrigger className="w-full relative focus-visible:ring-offset-0 focus-visible:ring-0 border-gray-300 flex items-center text-gray-600">
+        <SelectValue placeholder="Select platform" asChild>
+          <div className="flex items-center gap-x-3">
+            {selectedPlatform?.icon}
+            <span>{selectedPlatform?.label}</span>
+          </div>
+        </SelectValue>
       </SelectTrigger>
       <SelectContent className="w-full">
         <SelectGroup>
-          {PLTAFORMS.map((platform) => (
-            <SelectItem key={platform.value} value={platform.value}>
-              {/* {platform.icon && <platform.icon size={15} />} */}
-              <span>{platform.label}</span>
+          {PLATFORMS.map((platform) => (
+            <SelectItem value={platform.value} key={platform.value}>
+              {platform.label}
             </SelectItem>
           ))}
         </SelectGroup>
@@ -47,7 +86,7 @@ const SelectPlatform = () => {
 
 const LinkInput = () => {
   return (
-    <div>
+    <div className="w-full">
       <Label className="text-xs text-gray-600">Link</Label>
       <div className="relative w-full flex items-center text-gray-600">
         <Link className="absolute mx-4" size={14} />
@@ -79,7 +118,7 @@ const LinkCard = ({}) => {
           Remove
         </a>
       </div>
-      <div className="flex flex-col items-start gap-y-2">
+      <div className="flex flex-col items-start gap-y-2 pt-4">
         <SelectPlatform />
         <LinkInput />
       </div>
