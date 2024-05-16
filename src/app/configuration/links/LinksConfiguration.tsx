@@ -15,11 +15,11 @@ const LinksConfiguration = ({ className }: LinksConfigurationProps) => {
   return (
     <ScrollArea
       className={cn(
-        "w-full h-full flex flex-col gap-y-2 px-4 py-6 rounded-md shadow-md",
+        "w-full flex flex-col gap-y-2 px-4 py-6 rounded-md h-full md:h-[calc(100vh-8rem)]",
         className
       )}
     >
-      <div className="h-full flex flex-col gap-y-2">
+      <div className="flex flex-col gap-y-2">
         <div className="space-y-2 pb-4">
           <h1 className="text-2xl font-bold text-gray-900">
             Customize your links
@@ -36,13 +36,14 @@ const LinksConfiguration = ({ className }: LinksConfigurationProps) => {
       </div>
 
       {/* LinkCards go here */}
-      <div className="py-3 gap-y-4 flex flex-col ">
+      <div className="py-3 gap-y-4 flex flex-col pb-20 ">
         <LinkCard />
         <LinkCard />
         <LinkCard />
       </div>
 
-      <div className="absolute inset-x-0 bottom-0  flex justify-end py-6 border-t border-t-gray-300">
+      <div className="absolute inset-x-0 h-[40px] bottom-20 bg-gradient-to-t from-white to-transparent from-50%" />
+      <div className="absolute inset-x-0 bottom-0 bg-white flex justify-end py-6 border-t border-t-gray-300/80 pr-4 z-[999]">
         <Button>Save</Button>
       </div>
     </ScrollArea>
