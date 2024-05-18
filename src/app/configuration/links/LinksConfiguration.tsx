@@ -1,7 +1,6 @@
 "use client";
-import LinkCard from "@/app/configuration/links/LinkCard";
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
+import { Form, FormMessage } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
@@ -23,7 +22,6 @@ import {
   Plus,
 } from "lucide-react";
 import Link from "next/link";
-import React, { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import { Link as LinkIcon } from "lucide-react";
@@ -36,13 +34,11 @@ interface LinksConfigurationProps {
 const formSchema = z.object({
   links: z.array(
     z.object({
-      platform: z.object({
-        label: z.string(),
-        value: z.string(),
-        icon: z.any(),
+      platform: z.string().min(2, {
+        message: "Please select a valid platform.",
       }),
       url: z.string().url({
-        message: "Invalid URL.",
+        message: "Please enter a valid URL.",
       }),
     })
   ),
@@ -84,11 +80,7 @@ const LinksConfiguration = ({ className }: LinksConfigurationProps) => {
     defaultValues: {
       links: [
         {
-          platform: {
-            label: "Instagram",
-            value: "instagram",
-            icon: null,
-          },
+          platform: "",
           url: "",
         },
       ],
@@ -126,11 +118,7 @@ const LinksConfiguration = ({ className }: LinksConfigurationProps) => {
           className="gap-x-1"
           onClick={() =>
             append({
-              platform: {
-                label: "Instagram",
-                value: "instagram",
-                icon: null,
-              },
+              platform: "",
               url: "",
             })
           }
@@ -167,21 +155,25 @@ const LinksConfiguration = ({ className }: LinksConfigurationProps) => {
                   </a>
                 </div>
                 <div className="flex flex-col items-start gap-y-2 pt-4">
-                  <Select>
+                  <Select
+                    onValueChange={(value) =>
+                      form.setValue(`links.${index}.platform`, value)
+                    }
+                  >
                     <Label className="text-xs text-gray-600">Platform</Label>
-                    <SelectTrigger className="w-full relative focus-visible:ring-offset-0 focus-visible:ring-0 border-gray-300 flex items-center text-gray-600">
+                    <SelectTrigger
+                      className={cn(
+                        "w-full relative focus-visible:ring-offset-0 focus-visible:ring-0 border-gray-300 flex items-center text-gray-600",
+                        {
+                          "border-destructive":
+                            form.formState.errors.links?.[index]?.platform,
+                        }
+                      )}
+                    >
                       <SelectValue
                         placeholder="Select platform"
-                        asChild
                         {...form.register(`links.${index}.platform`)}
-                      >
-                        <div
-                          className="flex items-center gap-x-3"
-                          onChange={(e) => console.log(e)}
-                        >
-                          <span className="text-gray-600"></span>
-                        </div>
-                      </SelectValue>
+                      />
                     </SelectTrigger>
                     <SelectContent className="w-full z-[999]">
                       <SelectGroup>
@@ -195,17 +187,36 @@ const LinksConfiguration = ({ className }: LinksConfigurationProps) => {
                         ))}
                       </SelectGroup>
                     </SelectContent>
+                    {form.formState.errors.links?.[index]?.platform && (
+                      <p className="text-destructive text-xs pt-2">
+                        {
+                          form.formState?.errors?.links?.[index]?.platform
+                            ?.message
+                        }
+                      </p>
+                    )}
                   </Select>{" "}
                   <div className="w-full">
                     <Label className="text-xs text-gray-600">Link</Label>
                     <div className="relative w-full flex items-center text-gray-600">
                       <LinkIcon className="absolute mx-4" size={14} />
                       <Input
-                        className="focus-visible:ring-offset-0 focus-visible:ring-0 border-gray-300 pl-10"
-                        placeholder="https://google.com"
+                        className={cn(
+                          "focus-visible:ring-offset-0 focus-visible:ring-0 border-gray-300 pl-10",
+                          {
+                            "border-destructive":
+                              form.formState.errors.links?.[index]?.url,
+                          }
+                        )}
+                        placeholder="https://facebook.com/your-profile"
                         {...form.register(`links.${index}.url` as const)}
                       />
                     </div>
+                    {form.formState.errors.links?.[index]?.url && (
+                      <p className="text-destructive text-xs pt-2">
+                        {form.formState?.errors?.links?.[index]?.url?.message}
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>
