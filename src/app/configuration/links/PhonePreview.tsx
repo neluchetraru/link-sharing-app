@@ -10,8 +10,8 @@ interface PhonePreviewProps {
 const PhonePreview = ({ className }: PhonePreviewProps) => {
   return (
     <div className={cn("flex items-center justify-center", className)}>
-      <div className="h-auto relative aspect-[9/16] lg:w-[350px] w-[300px]">
-        <img src="/phone.jpg" alt="" className="absolute h-full -z-10" />
+      <div className="relative aspect-[9/16] lg:max-h-[calc(100vh-10rem)] max-h-[50vh]">
+        <img src="/phone.jpg" alt="" className="" />
         <div
           className="absolute inset-x-0 flex flex-col gap-y-1 left-1/2 -translate-x-1/2 w-8/12 top-[10%]"
           style={{}}

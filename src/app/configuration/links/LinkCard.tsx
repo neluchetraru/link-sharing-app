@@ -1,4 +1,5 @@
 "use client";
+import { FormValues } from "@/app/configuration/links/LinksConfiguration";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,9 +21,10 @@ import {
   List,
   Trash,
 } from "lucide-react";
-import React, { useState } from "react";
+import React, { InputHTMLAttributes, useState } from "react";
+import { UseFormRegister } from "react-hook-form";
 
-const PLATFORMS = [
+export const PLATFORMS = [
   {
     label: "Instagram",
     value: "instagram",
@@ -50,21 +52,25 @@ const PLATFORMS = [
   },
 ] as const;
 
-const SelectPlatform = () => {
+const SelectPlatform = ({
+  register,
+  index,
+}: {
+  register: UseFormRegister<FormValues>;
+  index: number;
+}) => {
   const [selectedPlatform, setSelectedPlatform] = useState<
     (typeof PLATFORMS)[number] | undefined
   >();
   return (
-    <Select
-      onValueChange={(value) =>
-        setSelectedPlatform(
-          PLATFORMS.find((platform) => platform.value === value)!
-        )
-      }
-    >
+    <Select>
       <Label className="text-xs text-gray-600">Platform</Label>
       <SelectTrigger className="w-full relative focus-visible:ring-offset-0 focus-visible:ring-0 border-gray-300 flex items-center text-gray-600">
-        <SelectValue placeholder="Select platform" asChild>
+        <SelectValue
+          placeholder="Select platform"
+          asChild
+          {...register(`links.${index}.platform`)}
+        >
           <div className="flex items-center gap-x-3">
             {selectedPlatform?.icon}
             <span>{selectedPlatform?.label}</span>
@@ -84,7 +90,13 @@ const SelectPlatform = () => {
   );
 };
 
-const LinkInput = () => {
+const LinkInput = ({
+  register,
+  index,
+}: {
+  register: UseFormRegister<FormValues>;
+  index: number;
+}) => {
   return (
     <div className="w-full">
       <Label className="text-xs text-gray-600">Link</Label>
@@ -93,18 +105,28 @@ const LinkInput = () => {
         <Input
           className="focus-visible:ring-offset-0 focus-visible:ring-0 border-gray-300 pl-10"
           placeholder="https://google.com"
+          {...register(`links.${index}.url` as const)}
         />
       </div>
     </div>
   );
 };
 
-const LinkCard = ({}) => {
+const LinkCard = ({
+  index,
+  onRemove,
+  register,
+}: {
+  index: number;
+  onRemove: (arg0: number) => void;
+
+  register: UseFormRegister<FormValues>;
+}) => {
   return (
     <div className="bg-gray-100 px-3 py-4 rounded-md">
       <div className="flex items-center justify-between">
         <h3 className="text-gray-500 text-sm flex items-center gap-x-2 font-bold">
-          <List size={13} /> Link #1
+          <List size={13} /> Link #{index + 1}
         </h3>
         <a
           href="#"
@@ -113,14 +135,15 @@ const LinkCard = ({}) => {
           }
           onClick={(e) => {
             e.preventDefault();
+            onRemove(index);
           }}
         >
           Remove
         </a>
       </div>
       <div className="flex flex-col items-start gap-y-2 pt-4">
-        <SelectPlatform />
-        <LinkInput />
+        <SelectPlatform register={register} index={index} />
+        <LinkInput register={register} index={index} />
       </div>
     </div>
   );
