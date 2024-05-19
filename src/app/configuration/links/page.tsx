@@ -1,8 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Form, FormMessage } from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Select,
   SelectContent,
@@ -12,86 +11,28 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Facebook,
-  Github,
-  Instagram,
-  Linkedin,
-  List,
-  Plus,
-} from "lucide-react";
-import Link from "next/link";
-import { useFieldArray, useForm } from "react-hook-form";
-import { z } from "zod";
+import { List, Plus } from "lucide-react";
 import { Link as LinkIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import {
+  LinksFormValues,
+  useLinksConfiguration,
+} from "@/hooks/useLinksConfiguration";
+import {
+  ConfigurationContext,
+  useConfiguration,
+} from "@/providers/Configuration";
+import { useContext } from "react";
 
 interface PageProps {
   className?: string;
 }
 
-const formSchema = z.object({
-  links: z.array(
-    z.object({
-      platform: z.string().min(2, {
-        message: "Please select a valid platform.",
-      }),
-      url: z.string().url({
-        message: "Please enter a valid URL.",
-      }),
-    })
-  ),
-});
-
-export const PLATFORMS = [
-  {
-    label: "Instagram",
-    value: "instagram",
-    icon: <Instagram className="w-4 h-4 text-gray-500" />,
-  },
-  {
-    label: "Facebook",
-    value: "facebook",
-    icon: <Facebook className="w-4 h-4 text-gray-500" />,
-  },
-  {
-    label: "TikTok",
-    value: "tiktok",
-    icon: <Facebook className="w-4 h-4 text-gray-500" />,
-  },
-  {
-    label: "GitHub",
-    value: "github",
-    icon: <Github className="w-4 h-4 text-gray-500" />,
-  },
-  {
-    label: "LinkedIn",
-    value: "linkedin",
-    icon: <Linkedin className="w-4 h-4 text-gray-500" />,
-  },
-] as const;
-
-export type FormValues = z.infer<typeof formSchema>;
-
 const Page = ({ className }: PageProps) => {
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      links: [
-        {
-          platform: "",
-          url: "",
-        },
-      ],
-    },
-    mode: "onBlur",
-  });
-  const { fields, append, remove } = useFieldArray({
-    name: "links",
-    control: form.control,
-  });
-  const onSubmit = (data: FormValues) => {
+  const { fieldArray, form, PLATFORMS } =
+    useContext(ConfigurationContext)?.linksConfiguration!;
+
+  const onSubmit = (data: LinksFormValues) => {
     console.log(form.getValues());
     console.log(form.formState.errors.links);
   };
@@ -112,7 +53,7 @@ const Page = ({ className }: PageProps) => {
           variant="outline"
           className="gap-x-1"
           onClick={() =>
-            append({
+            fieldArray.append({
               platform: "",
               url: "",
             })
@@ -129,7 +70,7 @@ const Page = ({ className }: PageProps) => {
           className="py-3 gap-y-4 flex flex-col pb-32"
           onSubmit={form.handleSubmit(onSubmit)}
         >
-          {fields.map((field, index) => {
+          {fieldArray.fields.map((field, index) => {
             return (
               <div className="bg-gray-100 px-3 py-4 rounded-md" key={field.id}>
                 <div className="flex items-center justify-between">
@@ -143,7 +84,7 @@ const Page = ({ className }: PageProps) => {
                     }
                     onClick={(e) => {
                       e.preventDefault();
-                      remove(index);
+                      fieldArray.remove(index);
                     }}
                   >
                     Remove
@@ -161,7 +102,7 @@ const Page = ({ className }: PageProps) => {
                         "w-full relative focus-visible:ring-offset-0 focus-visible:ring-0 border-gray-300 flex items-center text-gray-600",
                         {
                           "border-destructive":
-                            form.formState.errors.links?.[index]?.platform,
+                            form.formState?.errors?.links?.[index]?.platform,
                         }
                       )}
                     >

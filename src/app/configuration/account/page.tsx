@@ -10,48 +10,18 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  AccountFormValues,
+  useAccountConfiguration,
+} from "@/hooks/useAccountConfiguration";
 import { cn } from "@/lib/utils";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Image, SquareUserRound } from "lucide-react";
-import React from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-const MAX_FILE_SIZE = 5000000;
-const ACCEPTED_IMAGE_TYPES = [
-  "image/jpeg",
-  "image/jpg",
-  "image/png",
-  "image/webp",
-];
-
-const formSchema = z.object({
-  avatar: z
-    .any()
-    .refine((file) => file?.size <= MAX_FILE_SIZE, `Max image size is 5MB.`)
-    .refine(
-      (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
-      "Only .jpg, .jpeg, .png and .webp formats are supported."
-    ),
-  firstName: z.string({ message: "Please enter your first name." }).min(2, {
-    message: "First name must be at least 2 characters long.",
-  }),
-  lastName: z.string({ message: "Please enter your first name." }).min(2, {
-    message: "Last name must be at least 2 characters long.",
-  }),
-  email: z.string({ message: "Please enter your email." }).email({
-    message: "Please enter a valid email address.",
-  }),
-});
+import { useConfiguration } from "@/providers/Configuration";
+import { Image } from "lucide-react";
 
 const Page = () => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    mode: "onBlur",
-  });
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log(form.getValues());
-    console.log(form.formState.errors);
+  const { form } = useConfiguration()?.accountConfiguration!;
+  const onSubmit = (data: AccountFormValues) => {
+    console.log(data);
   };
   return (
     <>
@@ -94,21 +64,36 @@ const Page = () => {
                         className="hidden"
                         placeholder="Picture"
                         accept="image/*"
-                        onChange={(event) => console.log(event)}
+                        name={field.name}
+                        onChange={(e) => {
+                          field.onChange(e.target.files);
+                        }}
+                        value={undefined}
                         title=""
                       />
                       <Label
                         htmlFor="avatar"
                         className="w-full h-full cursor-pointer relative group"
                       >
-                        <img
-                          className="w-full h-full rounded-lg"
-                          src="/account-placeholder.jpg"
-                          alt="account placeholder avatar"
-                        />
+                        {form.getValues("avatar") ? (
+                          <img
+                            className="w-full h-full rounded-lg aspect-square object-scale-down"
+                            src={URL.createObjectURL(
+                              form.getValues("avatar")[0]
+                            )}
+                            alt="account avatar"
+                          />
+                        ) : (
+                          <img
+                            className="w-full h-full rounded-lg"
+                            src="/account-placeholder.jpg"
+                            alt="account placeholder avatar"
+                          />
+                        )}
+
                         <div className="rounded-lg font-light text-white gap-y-2 absolute inset-0 z-50 group-hover:flex flex-col items-center justify-center hidden transition-all backdrop-brightness-50">
                           <Image size={32} />
-                          <p className="text-sm">Choose image</p>
+                          <p className="text-sm">Change image</p>
                         </div>
                       </Label>
                     </div>
