@@ -3,7 +3,7 @@
 import Logo from "@/components/Logo";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { CircleUser, LucideLink } from "lucide-react";
+import { CircleUser, Eye, LucideLink } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
@@ -18,7 +18,7 @@ const NavBar = ({ className }: NavBarProps) => {
     <div className={cn("flex items-center justify-between", className)}>
       <Logo />
 
-      <div className="sm:flex items-center gap-x-3 hidden">
+      <div className="flex items-center gap-x-3">
         <Link
           href="/configuration/links"
           className={cn(
@@ -32,7 +32,7 @@ const NavBar = ({ className }: NavBarProps) => {
           )}
         >
           <LucideLink size={15} />
-          <span>Links</span>
+          <span className="hidden sm:block">Links</span>
         </Link>
         <Link
           href="/configuration/account"
@@ -48,23 +48,22 @@ const NavBar = ({ className }: NavBarProps) => {
           )}
         >
           <CircleUser size={15} />
-          <span>Account</span>
+          <span className="hidden sm:block">Account</span>
         </Link>
       </div>
 
-      <div className="hidden sm:block">
-        <Link
-          href="/preview"
-          className={cn(
-            "flex items-center gap-x-1 text-gray-600",
-            buttonVariants({
-              variant: "outline",
-            })
-          )}
-        >
-          Preview
-        </Link>
-      </div>
+      <Link
+        href="/preview"
+        className={cn(
+          "flex items-center gap-x-1 text-gray-600",
+          buttonVariants({
+            variant: "outline",
+          })
+        )}
+      >
+        <Eye size={15} />
+        <span className="hidden sm:block">Preview</span>
+      </Link>
     </div>
   );
 };
