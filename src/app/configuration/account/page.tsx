@@ -120,7 +120,11 @@ const Page = () => {
                     First name
                   </FormLabel>
                   <div className="basis-2/3">
-                    <Input {...field} className="w-full" />
+                    <Input
+                      {...field}
+                      className="w-full"
+                      value={field.value || ""}
+                    />
                     {form.formState.errors.firstName && (
                       <p className="text-destructive text-xs pt-2">
                         {form.formState.errors.firstName.message}
@@ -139,7 +143,12 @@ const Page = () => {
                     Last name
                   </FormLabel>
                   <div className="basis-2/3">
-                    <Input {...field} className="w-full" />
+                    <Input
+                      {...field}
+                      className="w-full"
+                      onChange={field.onChange}
+                      value={field.value || ""}
+                    />
                     {form.formState.errors.lastName && (
                       <p className="text-destructive text-xs pt-2">
                         {form.formState.errors.lastName.message}
@@ -158,7 +167,11 @@ const Page = () => {
                     Email
                   </Label>
                   <div className="basis-2/3">
-                    <Input {...field} className="w-full" />
+                    <Input
+                      {...field}
+                      className="w-full"
+                      value={field.value || ""}
+                    />
                     {form.formState.errors.email && (
                       <p className="text-destructive text-xs pt-2">
                         {form.formState.errors.email.message}

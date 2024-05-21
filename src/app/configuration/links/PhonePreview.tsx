@@ -12,8 +12,11 @@ interface PhonePreviewProps {
 
 const PhonePreview = ({ className }: PhonePreviewProps) => {
   const configuration = useConfiguration();
-  const account = configuration?.accountConfiguration.form.getValues();
-  const { links } = configuration?.linksConfiguration.form.getValues() ?? {};
+  const watchAccount = configuration?.accountConfiguration?.form.watch;
+  const watchLinks = configuration?.linksConfiguration?.form.watch;
+
+  const account = watchAccount && watchAccount();
+  const links = (watchLinks && watchLinks().links) || [];
   return (
     <div className={cn("flex items-center justify-center", className)}>
       <div className="relative aspect-[9/16] lg:max-h-[calc(100vh-10rem)] max-h-[50vh] overflow-hidden">
