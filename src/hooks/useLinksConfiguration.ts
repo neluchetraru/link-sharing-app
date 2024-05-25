@@ -1,5 +1,9 @@
 import { Icons } from "@/components/Icons";
+import { getLinks } from "@/hooks/actions";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -62,6 +66,19 @@ export const PLATFORMS = [
 export type LinksFormValues = z.infer<typeof linksFormSchema>;
 
 export function useLinksConfiguration() {
+    const { user } = useKindeBrowserClient();
+
+    const { data, refetch } = useQuery({
+        queryKey: ['user-links'],
+        queryFn: async () => getLinks(user?.id ?? ""),
+    })
+
+    useEffect(() => {
+        if (user) {
+            refetch()
+        }
+    }, [user]);
+
     const form = useForm<LinksFormValues>({
         resolver: zodResolver(linksFormSchema),
         defaultValues: {
@@ -78,6 +95,14 @@ export function useLinksConfiguration() {
         name: "links",
         control: form.control,
     });
+
+    useEffect(() => {
+        if (data) {
+            form.setValue("links", data);
+        }
+    }, [data]);
+
+
 
     return {
         form,

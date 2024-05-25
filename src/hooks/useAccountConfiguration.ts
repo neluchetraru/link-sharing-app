@@ -1,4 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from 'zod'
 
@@ -35,10 +37,21 @@ export type AccountFormValues = z.infer<typeof accountFormSchema>;
 
 
 export function useAccountConfiguration() {
+    const { user } = useKindeBrowserClient();
     const accountForm = useForm<AccountFormValues>({
         resolver: zodResolver(accountFormSchema),
         mode: "onBlur",
+
     });
+
+    useEffect(() => {
+        if (user) {
+            accountForm.setValue("firstName", user?.given_name ?? "");
+            accountForm.setValue("lastName", user?.family_name ?? "");
+            accountForm.setValue("email", user?.email ?? "");
+            accountForm.setValue("avatar", user?.picture ?? "");
+        }
+    }, [user]);
 
     return { form: accountForm };
 }

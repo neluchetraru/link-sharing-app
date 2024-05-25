@@ -14,9 +14,10 @@ import { Label } from "@/components/ui/label";
 import { AccountFormValues } from "@/hooks/useAccountConfiguration";
 import { cn } from "@/lib/utils";
 import { useConfiguration } from "@/providers/Configuration";
-import { Image } from "lucide-react";
+import { Image, LogOut } from "lucide-react";
 import { redirect, useRouter } from "next/navigation";
 import ConfigurationSkeleton from "@/components/ConfigurationSkeleton";
+import Link from "next/link";
 
 const Page = () => {
   const { form } = useConfiguration()?.accountConfiguration!;
@@ -30,14 +31,22 @@ const Page = () => {
   if (isLoading) return <ConfigurationSkeleton />;
 
   if (!isAuthenticated) {
-    localStorage.setItem("redirect", "/configuration/links");
+    localStorage.setItem("redirect", "/configuration/account");
     router.push("/api/auth/login");
   }
+
   return (
     <>
       <div className="flex flex-col gap-y-2">
         <div className="gap-y-2 pb-4">
-          <h1 className="text-2xl font-bold text-gray-900">Profile details</h1>
+          <div className="flex justify-between items-center">
+            <h1 className="text-2xl font-bold text-gray-900">
+              Profile details
+            </h1>
+            <Link href="/api/auth/logout">
+              <LogOut size={25} className="mr-2 text-destructive" />
+            </Link>
+          </div>
           <p className="text-gray-600 text-sm">
             Add your details to create a personal touch to your profile
           </p>

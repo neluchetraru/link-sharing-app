@@ -27,6 +27,8 @@ import {
 import { useContext } from "react";
 import { useRouter } from "next/navigation";
 import ConfigurationSkeleton from "@/components/ConfigurationSkeleton";
+import { useMutation } from "@tanstack/react-query";
+import { saveLinks } from "@/app/configuration/links/actions";
 
 interface PageProps {
   className?: string;
@@ -36,13 +38,13 @@ const Page = ({ className }: PageProps) => {
   const { fieldArray, form, PLATFORMS } =
     useContext(ConfigurationContext)?.linksConfiguration!;
 
-  const onSubmit = (data: LinksFormValues) => {
-    console.log(form.getValues());
-    console.log(form.formState.errors.links);
-  };
-
-  const { isAuthenticated, isLoading } = useKindeBrowserClient();
+  const { isAuthenticated, isLoading, user } = useKindeBrowserClient();
   const router = useRouter();
+
+  const { mutate: saveConfig, isPending } = useMutation({
+    mutationKey: ["update-links"],
+    onMutate: async ({ userId, data }) => saveLinks(userId, data.links),
+  });
 
   if (isLoading) return <ConfigurationSkeleton />;
 
@@ -50,6 +52,10 @@ const Page = ({ className }: PageProps) => {
     localStorage.setItem("redirect", "/configuration/links");
     router.push("/api/auth/login");
   }
+
+  const onSubmit = (data: LinksFormValues) => {
+    saveConfig({ userId: user?.id, data });
+  };
   return (
     <>
       <div className="flex flex-col gap-y-2">
@@ -175,11 +181,12 @@ const Page = ({ className }: PageProps) => {
           <div className="absolute inset-x-0 bottom-0 bg-white flex justify-end py-6 border-t border-t-gray-300/80 pr-4 z-[999]">
             <Button
               type="submit"
+              disabled={isPending}
               onClick={() => {
                 console.log(form.formState.errors);
               }}
             >
-              Save
+              {isPending ? "Saving..." : "Save"}
             </Button>
           </div>
         </form>

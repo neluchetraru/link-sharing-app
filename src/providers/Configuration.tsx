@@ -2,6 +2,7 @@
 
 import { useAccountConfiguration } from "@/hooks/useAccountConfiguration";
 import { useLinksConfiguration } from "@/hooks/useLinksConfiguration";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { createContext, useContext } from "react";
 
 export const ConfigurationContext = createContext<{

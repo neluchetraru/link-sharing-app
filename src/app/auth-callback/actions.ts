@@ -30,7 +30,5 @@ export const getAuthStatus = async () => {
     }
 
 
-
-
     return { success: true };
 }
