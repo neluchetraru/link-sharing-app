@@ -3,7 +3,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import React from "react";
 
-const Layout = ({
+const Layout = async ({
   children,
 }: Readonly<{
   children: React.ReactNode;

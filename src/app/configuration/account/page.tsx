@@ -1,4 +1,5 @@
 "use client";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -10,19 +11,28 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  AccountFormValues,
-  useAccountConfiguration,
-} from "@/hooks/useAccountConfiguration";
+import { AccountFormValues } from "@/hooks/useAccountConfiguration";
 import { cn } from "@/lib/utils";
 import { useConfiguration } from "@/providers/Configuration";
 import { Image } from "lucide-react";
+import { redirect, useRouter } from "next/navigation";
+import ConfigurationSkeleton from "@/components/ConfigurationSkeleton";
 
 const Page = () => {
   const { form } = useConfiguration()?.accountConfiguration!;
   const onSubmit = (data: AccountFormValues) => {
     console.log(data);
   };
+
+  const { isAuthenticated, isLoading } = useKindeBrowserClient();
+  const router = useRouter();
+
+  if (isLoading) return <ConfigurationSkeleton />;
+
+  if (!isAuthenticated) {
+    localStorage.setItem("redirect", "/configuration/links");
+    router.push("/api/auth/login");
+  }
   return (
     <>
       <div className="flex flex-col gap-y-2">

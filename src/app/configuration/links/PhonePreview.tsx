@@ -3,8 +3,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { PLATFORMS } from "@/hooks/useLinksConfiguration";
 import { cn } from "@/lib/utils";
 import { useConfiguration } from "@/providers/Configuration";
-import { ArrowRight, Github, Instagram, Linkedin } from "lucide-react";
-import React from "react";
 
 interface PhonePreviewProps {
   className?: string;

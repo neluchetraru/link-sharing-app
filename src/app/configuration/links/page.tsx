@@ -2,6 +2,8 @@
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+
 import {
   Select,
   SelectContent,
@@ -23,6 +25,8 @@ import {
   useConfiguration,
 } from "@/providers/Configuration";
 import { useContext } from "react";
+import { useRouter } from "next/navigation";
+import ConfigurationSkeleton from "@/components/ConfigurationSkeleton";
 
 interface PageProps {
   className?: string;
@@ -37,6 +41,15 @@ const Page = ({ className }: PageProps) => {
     console.log(form.formState.errors.links);
   };
 
+  const { isAuthenticated, isLoading } = useKindeBrowserClient();
+  const router = useRouter();
+
+  if (isLoading) return <ConfigurationSkeleton />;
+
+  if (!isAuthenticated) {
+    localStorage.setItem("redirect", "/configuration/links");
+    router.push("/api/auth/login");
+  }
   return (
     <>
       <div className="flex flex-col gap-y-2">
