@@ -99,6 +99,8 @@ export function useLinksConfiguration() {
     useEffect(() => {
         if (data) {
             form.setValue("links", data);
+
+            console.log(data)
         }
     }, [data]);
 

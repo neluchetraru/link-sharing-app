@@ -5,6 +5,7 @@ import NavBar from "@/components/NavBar";
 import { cn } from "@/lib/utils";
 import { ConfigurationContextProvider } from "@/providers/Configuration";
 import Providers from "@/components/Providers";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,6 +26,7 @@ export default function RootLayout({
           <ConfigurationContextProvider>
             <NavBar className="m-4 p-4 shadow-elevated rounded-md" />
             {children}
+            <Toaster />
           </ConfigurationContextProvider>
         </Providers>
       </body>

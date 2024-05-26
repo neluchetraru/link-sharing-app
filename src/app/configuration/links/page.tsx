@@ -1,6 +1,12 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
@@ -29,6 +35,7 @@ import { useRouter } from "next/navigation";
 import ConfigurationSkeleton from "@/components/ConfigurationSkeleton";
 import { useMutation } from "@tanstack/react-query";
 import { saveLinks } from "@/app/configuration/links/actions";
+import { toast } from "@/components/ui/use-toast";
 
 interface PageProps {
   className?: string;
@@ -43,18 +50,39 @@ const Page = ({ className }: PageProps) => {
 
   const { mutate: saveConfig, isPending } = useMutation({
     mutationKey: ["update-links"],
-    onMutate: async ({ userId, data }) => saveLinks(userId, data.links),
+    mutationFn: async ({
+      userId,
+      data,
+    }: {
+      userId: string;
+      data: LinksFormValues;
+    }) => saveLinks(userId, data.links),
+    onSuccess: () => {
+      toast({
+        title: "Links updated",
+        description: "Your links have been updated successfully!",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Failed to update links",
+        description:
+          "An error occurred while updating your links. Please try again later." +
+          error.message,
+        variant: "destructive",
+      });
+    },
   });
 
   if (isLoading) return <ConfigurationSkeleton />;
 
   if (!isAuthenticated) {
     localStorage.setItem("redirect", "/configuration/links");
-    router.push("/api/auth/login");
+    return router.push("/api/auth/login");
   }
 
   const onSubmit = (data: LinksFormValues) => {
-    saveConfig({ userId: user?.id, data });
+    saveConfig({ userId: user!.id, data });
   };
   return (
     <>
@@ -109,76 +137,95 @@ const Page = ({ className }: PageProps) => {
                     Remove
                   </a>
                 </div>
-                <div className="flex flex-col items-start gap-y-2 pt-4">
-                  <Select
-                    onValueChange={(value) =>
-                      form.setValue(`links.${index}.platform`, value)
-                    }
-                  >
-                    <Label className="text-xs text-gray-600">Platform</Label>
-                    <SelectTrigger
-                      className={cn(
-                        "w-full relative focus-visible:ring-offset-0 focus-visible:ring-0 border-gray-300 flex items-center text-gray-600",
-                        {
-                          "border-destructive":
-                            form.formState?.errors?.links?.[index]?.platform,
+
+                <FormField
+                  control={form.control}
+                  name={`links.${index}.platform`}
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col items-start gap-y-2 pt-4">
+                      <FormLabel className="text-xs text-gray-600">
+                        Platform
+                      </FormLabel>
+                      <Select
+                        onValueChange={(value) =>
+                          // form.setValue(`links.${index}.platform`, value)
+                          field.onChange(value)
                         }
-                      )}
-                    >
-                      <SelectValue
-                        placeholder="Select platform"
-                        {...form.register(`links.${index}.platform`)}
-                      />
-                    </SelectTrigger>
-                    <SelectContent className="w-full z-[999]">
-                      <SelectGroup>
-                        {PLATFORMS.map((platform) => (
-                          <SelectItem
-                            value={platform.value}
-                            key={platform.value}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger
+                            className={cn(
+                              "w-full relative focus-visible:ring-offset-0 focus-visible:ring-0 border-gray-300 flex items-center text-gray-600",
+                              {
+                                "border-destructive":
+                                  form.formState?.errors?.links?.[index]
+                                    ?.platform,
+                              }
+                            )}
                           >
-                            {platform.label}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                    {form.formState.errors.links?.[index]?.platform && (
-                      <p className="text-destructive text-xs pt-2">
-                        {
-                          form.formState?.errors?.links?.[index]?.platform
-                            ?.message
-                        }
-                      </p>
-                    )}
-                  </Select>{" "}
-                  <div className="w-full">
-                    <Label className="text-xs text-gray-600">Link</Label>
-                    <div className="relative w-full flex items-center text-gray-600">
-                      <LinkIcon className="absolute mx-4" size={14} />
-                      <Input
-                        className={cn(
-                          "focus-visible:ring-offset-0 focus-visible:ring-0 border-gray-300 pl-10",
-                          {
-                            "border-destructive":
-                              form.formState.errors.links?.[index]?.url,
-                          }
+                            <SelectValue placeholder="Select platform" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className="w-full z-[999]">
+                          <SelectGroup>
+                            {PLATFORMS.map((platform) => (
+                              <SelectItem
+                                value={platform.value}
+                                key={platform.value}
+                              >
+                                {platform.label}
+                              </SelectItem>
+                            ))}
+                          </SelectGroup>
+                        </SelectContent>
+                        {form.formState.errors.links?.[index]?.platform && (
+                          <p className="text-destructive text-xs pt-2">
+                            {
+                              form.formState?.errors?.links?.[index]?.platform
+                                ?.message
+                            }
+                          </p>
                         )}
-                        placeholder="https://facebook.com/your-profile"
-                        {...form.register(`links.${index}.url` as const)}
-                      />
-                    </div>
-                    {form.formState.errors.links?.[index]?.url && (
-                      <p className="text-destructive text-xs pt-2">
-                        {form.formState?.errors?.links?.[index]?.url?.message}
-                      </p>
-                    )}
-                  </div>
-                </div>
+                      </Select>{" "}
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name={`links.${index}.url`}
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel className="text-xs text-gray-600">
+                        Link
+                      </FormLabel>
+                      <div className="relative w-full flex items-center text-gray-600">
+                        <LinkIcon className="absolute mx-4" size={14} />
+                        <Input
+                          className={cn(
+                            "focus-visible:ring-offset-0 focus-visible:ring-0 border-gray-300 pl-10",
+                            {
+                              "border-destructive":
+                                form.formState.errors.links?.[index]?.url,
+                            }
+                          )}
+                          placeholder="https://facebook.com/your-profile"
+                          {...field}
+                        />
+                      </div>
+                      {form.formState.errors.links?.[index]?.url && (
+                        <p className="text-destructive text-xs pt-2">
+                          {form.formState?.errors?.links?.[index]?.url?.message}
+                        </p>
+                      )}
+                    </FormItem>
+                  )}
+                />
               </div>
             );
           })}
           <div className="absolute inset-x-0 h-[40px] bottom-20 bg-gradient-to-t from-white to-transparent from-50%" />
-          <div className="absolute inset-x-0 bottom-0 bg-white flex justify-end py-6 border-t border-t-gray-300/80 pr-4 z-[999]">
+          <div className="absolute inset-x-0 bottom-0 bg-white flex justify-end py-6 border-t border-t-gray-300/80 pr-4 z-[80]">
             <Button
               type="submit"
               disabled={isPending}
