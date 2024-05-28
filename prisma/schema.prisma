@@ -27,7 +27,7 @@ model Link {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   link      String
-  url       String
+  profile   String
   postedBy  User?    @relation(fields: [userId], references: [id])
   userId    String?
 }

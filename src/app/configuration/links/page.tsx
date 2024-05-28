@@ -67,8 +67,7 @@ const Page = ({ className }: PageProps) => {
       toast({
         title: "Failed to update links",
         description:
-          "An error occurred while updating your links. Please try again later." +
-          error.message,
+          "An error occurred while updating your links. Please try again later.",
         variant: "destructive",
       });
     },
@@ -102,7 +101,7 @@ const Page = ({ className }: PageProps) => {
           onClick={() =>
             fieldArray.append({
               platform: "",
-              url: "",
+              profile: "",
             })
           }
         >
@@ -193,29 +192,41 @@ const Page = ({ className }: PageProps) => {
                 />
                 <FormField
                   control={form.control}
-                  name={`links.${index}.url`}
+                  name={`links.${index}.profile`}
                   render={({ field }) => (
                     <FormItem className="w-full">
                       <FormLabel className="text-xs text-gray-600">
                         Link
                       </FormLabel>
-                      <div className="relative w-full flex items-center text-gray-600">
-                        <LinkIcon className="absolute mx-4" size={14} />
+                      <div className="relative w-full flex items-center text-gray-600 border-gray-300 bg-white rounded-md">
+                        <LinkIcon className="mx-4 shrink-0" size={14} />
+                        <Label className="text-sm">
+                          {
+                            PLATFORMS.filter(
+                              (platform) =>
+                                platform.value ===
+                                form.getValues("links")[index].platform
+                            )[0]?.start
+                          }
+                        </Label>
                         <Input
                           className={cn(
-                            "focus-visible:ring-offset-0 focus-visible:ring-0 border-gray-300 pl-10",
+                            "focus-visible:ring-offset-0 text-sm focus-visible:ring-0 border-0 px-0",
                             {
                               "border-destructive":
-                                form.formState.errors.links?.[index]?.url,
+                                form.formState.errors.links?.[index]?.profile,
                             }
                           )}
-                          placeholder="https://facebook.com/your-profile"
+                          placeholder="your-profile"
                           {...field}
                         />
                       </div>
-                      {form.formState.errors.links?.[index]?.url && (
+                      {form.formState.errors.links?.[index]?.profile && (
                         <p className="text-destructive text-xs pt-2">
-                          {form.formState?.errors?.links?.[index]?.url?.message}
+                          {
+                            form.formState?.errors?.links?.[index]?.profile
+                              ?.message
+                          }
                         </p>
                       )}
                     </FormItem>

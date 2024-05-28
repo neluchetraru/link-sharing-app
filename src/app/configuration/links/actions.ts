@@ -3,7 +3,7 @@
 import { db } from "@/db";
 
 
-export const saveLinks = async (userId: string, links: { platform: string, url: string }[]) => {
+export const saveLinks = async (userId: string, links: { platform: string, profile: string }[]) => {
     await db.link.deleteMany({
         where: {
             userId
@@ -14,7 +14,7 @@ export const saveLinks = async (userId: string, links: { platform: string, url: 
         data: links.map(link => ({
             userId,
             link: link.platform,
-            url: link.url,
+            profile: link.profile,
         }))
     });
 }

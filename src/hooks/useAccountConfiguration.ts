@@ -1,27 +1,14 @@
+import { getAccount } from "@/hooks/actions";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from 'zod'
 
-const MAX_FILE_SIZE = 5000000;
-const ACCEPTED_IMAGE_TYPES = [
-    "image/jpeg",
-    "image/jpg",
-    "image/png",
-    "image/webp",
-    "image/svg"
-];
-
 
 const accountFormSchema = z.object({
-    avatar: z
-        .any()
-        .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, `Max image size is 5MB.`)
-        .refine(
-            (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
-            "Only .jpg, .jpeg, .png, .svg and .webp formats are supported."
-        ),
+    avatar: z.string().optional(),
     firstName: z.string({ message: "Please enter your first name." }).min(2, {
         message: "First name must be at least 2 characters long.",
     }),
@@ -38,6 +25,20 @@ export type AccountFormValues = z.infer<typeof accountFormSchema>;
 
 export function useAccountConfiguration() {
     const { user } = useKindeBrowserClient();
+
+
+    const { data, refetch } = useQuery({
+        queryKey: ['user-account'],
+        queryFn: async () => getAccount(user?.id ?? ""),
+    })
+
+    useEffect(() => {
+        if (user) {
+            refetch()
+        }
+    }, [user]);
+
+
     const accountForm = useForm<AccountFormValues>({
         resolver: zodResolver(accountFormSchema),
         mode: "onBlur",
@@ -45,13 +46,13 @@ export function useAccountConfiguration() {
     });
 
     useEffect(() => {
-        if (user) {
-            accountForm.setValue("firstName", user?.given_name ?? "");
-            accountForm.setValue("lastName", user?.family_name ?? "");
-            accountForm.setValue("email", user?.email ?? "");
-            accountForm.setValue("avatar", user?.picture ?? "");
+        if (data) {
+            accountForm.setValue("firstName", data?.firstName ?? "");
+            accountForm.setValue("lastName", data?.lastName ?? "");
+            accountForm.setValue("email", data?.email ?? "");
+            accountForm.setValue("avatar", data?.avatar ?? "");
         }
-    }, [user]);
+    }, [data]);
 
     return { form: accountForm };
 }

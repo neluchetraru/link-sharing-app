@@ -23,7 +23,7 @@ const PhonePreview = ({ className }: PhonePreviewProps) => {
           <div className="flex flex-col items-center mt-2">
             {account?.avatar ? (
               <img
-                src={URL.createObjectURL(account.avatar[0])}
+                src={account.avatar}
                 alt="account avatar"
                 className="w-10 h-10 rounded-full"
               />
@@ -50,7 +50,9 @@ const PhonePreview = ({ className }: PhonePreviewProps) => {
               if (!platform) return null;
 
               return (
-                <div
+                <a
+                  href={`${platform.start}${link.profile}`}
+                  target="_blank"
                   className={cn(
                     `bg-${platform.tw}`,
                     "flex items-center gap-x-2 rounded-lg w-full text-white py-1 px-2"
@@ -59,7 +61,7 @@ const PhonePreview = ({ className }: PhonePreviewProps) => {
                 >
                   {<platform.icon className="size-5 fill-white" />}
                   <p className="text-xs">{platform.label}</p>
-                </div>
+                </a>
               );
             })}
           </div>

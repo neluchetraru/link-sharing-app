@@ -18,22 +18,58 @@ import { Image, LogOut } from "lucide-react";
 import { redirect, useRouter } from "next/navigation";
 import ConfigurationSkeleton from "@/components/ConfigurationSkeleton";
 import Link from "next/link";
+import { toast } from "@/components/ui/use-toast";
+import { useMutation } from "@tanstack/react-query";
+import { saveAccount } from "@/app/configuration/account/actions";
+import { useUploadThing } from "@/lib/uploadthing";
 
 const Page = () => {
   const { form } = useConfiguration()?.accountConfiguration!;
-  const onSubmit = (data: AccountFormValues) => {
-    console.log(data);
-  };
 
-  const { isAuthenticated, isLoading } = useKindeBrowserClient();
+  const { isAuthenticated, isLoading, user } = useKindeBrowserClient();
   const router = useRouter();
+  const { mutate: saveConfig, isPending } = useMutation({
+    mutationKey: ["update-profile"],
+    mutationFn: async ({
+      userId,
+      data,
+    }: {
+      userId: string;
+      data: AccountFormValues;
+    }) => saveAccount(userId, data),
+    onSuccess: () => {
+      toast({
+        title: "Profile updated",
+        description: "Your account has been updated successfully!",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Failed to update account",
+        description:
+          error.message + "An error occurred while updating your account. Please try again later.",
+        variant: "destructive",
+      });
+    },
+  });
 
+  const { startUpload, isUploading } = useUploadThing("imageUploader");
   if (isLoading) return <ConfigurationSkeleton />;
 
   if (!isAuthenticated) {
     localStorage.setItem("redirect", "/configuration/account");
     router.push("/api/auth/login");
   }
+  const onSubmit = (data: AccountFormValues) => {
+    saveConfig({ userId: user?.id as string, data });
+  };
+
+  const handleUpload = async (file: File) => {
+    console.log("image uploaded", file);
+    if (!file) return;
+    const res = await startUpload([file]);
+    form.setValue("avatar", res?.[0].url);
+  };
 
   return (
     <>
@@ -85,7 +121,7 @@ const Page = () => {
                         accept="image/*"
                         name={field.name}
                         onChange={(e) => {
-                          field.onChange(e.target.files);
+                          handleUpload(e.target.files?.[0]!);
                         }}
                         value={undefined}
                         title=""
@@ -97,9 +133,7 @@ const Page = () => {
                         {form.getValues("avatar") ? (
                           <img
                             className="w-full h-full rounded-lg aspect-square object-scale-down"
-                            src={URL.createObjectURL(
-                              form.getValues("avatar")[0]
-                            )}
+                            src={form.getValues("avatar")}
                             alt="account avatar"
                           />
                         ) : (
@@ -110,9 +144,14 @@ const Page = () => {
                           />
                         )}
 
-                        <div className="rounded-lg font-light text-white gap-y-2 absolute inset-0 z-50 group-hover:flex flex-col items-center justify-center hidden transition-all backdrop-brightness-50">
-                          <Image size={32} />
-                          <p className="text-sm">Change image</p>
+                        <div className="rounded-lg font-light text-white gap-y-2 absolute inset-0 z-50 opacity-0 hover:opacity-100 flex flex-col items-center justify-center transition-all duration-300 backdrop-brightness-50">
+                          <Image
+                            size={32}
+                            className="transform group-hover:scale-110 transition-transform duration-300"
+                          />
+                          <p className="text-sm transform group-hover:translate-y-2 transition-transform duration-300">
+                            Change image
+                          </p>
                         </div>
                       </Label>
                     </div>
@@ -203,7 +242,9 @@ const Page = () => {
           </div>
           <div className="absolute inset-x-0 h-[40px] bottom-20 bg-gradient-to-t from-white to-transparent from-50%" />
           <div className="absolute inset-x-0 bottom-0 bg-white flex justify-end py-6 border-t border-t-gray-300/80 pr-4 z-[80]">
-            <Button type="submit">Save</Button>
+            <Button type="submit" disabled={isPending || isUploading}>
+              {isPending || isUploading ? "Loading..." : "Save"}
+            </Button>
           </div>
         </form>
       </Form>
