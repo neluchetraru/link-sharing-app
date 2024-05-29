@@ -15,7 +15,9 @@ const NavBar = ({ className }: NavBarProps) => {
   const pathName = usePathname();
 
   return (
-    <div className={cn("flex items-center justify-between", className)}>
+    <div
+      className={cn(" bg-white flex items-center justify-between", className)}
+    >
       <Logo />
 
       <div className="flex items-center gap-x-3">
@@ -58,7 +60,10 @@ const NavBar = ({ className }: NavBarProps) => {
           "flex items-center gap-x-1 text-gray-600",
           buttonVariants({
             variant: "outline",
-          })
+          }),
+          {
+            "bg-primary text-white": pathName === "/preview",
+          }
         )}
       >
         <Eye size={15} />

@@ -2,6 +2,7 @@
 
 import { db } from "@/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server"
+import { nanoid } from 'nanoid'
 
 export const getAuthStatus = async () => {
     const { getUser } = getKindeServerSession();
@@ -25,6 +26,7 @@ export const getAuthStatus = async () => {
                 email: user.email,
                 name: user.given_name + " " + user.family_name,
                 picture: user.picture,
+                shareId: nanoid(10)
             },
         });
     }

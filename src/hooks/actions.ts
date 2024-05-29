@@ -9,10 +9,6 @@ export const getLinks = async (userId: string) => {
         }
     });
 
-
-
-
-
     return links.map(link => ({
         platform: link.link,
         profile: link.profile,
@@ -37,5 +33,20 @@ export const getAccount = async (userId: string) => {
         lastName: user.name.split(" ")[1],
         email: user.email,
         avatar: user.picture,
+        shareId: user.shareId
     }
+}
+
+export const getAccountIdByShareId = async (shareId: string) => {
+    const user = await db.user.findFirst({
+        where: {
+            shareId
+        }
+    });
+
+    if (!user) {
+        throw new Error("User not found");
+    }
+
+    return user.id;
 }

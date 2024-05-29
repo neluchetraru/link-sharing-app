@@ -54,5 +54,5 @@ export function useAccountConfiguration() {
         }
     }, [data]);
 
-    return { form: accountForm };
+    return { form: accountForm, shareId: data?.shareId };
 }

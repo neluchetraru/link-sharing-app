@@ -236,13 +236,11 @@ const Page = ({ className }: PageProps) => {
             );
           })}
           <div className="absolute inset-x-0 h-[40px] bottom-20 bg-gradient-to-t from-white to-transparent from-50%" />
-          <div className="absolute inset-x-0 bottom-0 bg-white flex justify-end py-6 border-t border-t-gray-300/80 pr-4 z-[80]">
+          <div className="absolute inset-x-0 bottom-0 bg-white flex justify-end py-6 border-t border-t-gray-300/80 px-4 z-[80]">
             <Button
               type="submit"
               disabled={isPending}
-              onClick={() => {
-                console.log(form.formState.errors);
-              }}
+              className="w-full md:w-auto"
             >
               {isPending ? "Saving..." : "Save"}
             </Button>
