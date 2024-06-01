@@ -1,5 +1,6 @@
 "use client";
-import { getAuthStatus } from "@/app/auth-callback/actions";
+import { getAuthStatus, getUserData } from "@/app/auth-callback/actions";
+import { usePreview } from "@/hooks/usePreview";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -15,6 +16,7 @@ const Page = () => {
     retry: true,
     retryDelay: 500,
   });
+
   React.useEffect(() => {
     const redirect = localStorage.getItem("redirect");
     if (redirect) {

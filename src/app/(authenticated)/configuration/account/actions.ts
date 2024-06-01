@@ -1,7 +1,7 @@
 
 'use server'
+import { AccountFormValues } from "@/app/(authenticated)/configuration/account/page";
 import { db } from "@/db";
-import { AccountFormValues } from "@/hooks/useAccountConfiguration";
 
 export const saveAccount = async (userId: string, account: AccountFormValues) => {
     await db.user.update({
@@ -9,7 +9,7 @@ export const saveAccount = async (userId: string, account: AccountFormValues) =>
             id: userId
         },
         data: {
-            name: account.firstName + " " + account.lastName,
+            name: account.name,
             email: account.email,
             picture: account.avatar,
         }

@@ -1,10 +1,8 @@
 "use client";
 
+import { PLATFORMS } from "@/app/(authenticated)/configuration/links/page";
 import { toast } from "@/components/ui/use-toast";
-import { AccountFormValues } from "@/hooks/useAccountConfiguration";
-import { PLATFORMS, LinksFormValues } from "@/hooks/useLinksConfiguration";
 import { cn } from "@/lib/utils";
-import { useConfiguration } from "@/providers/Configuration";
 import { ArrowRight, Share2 } from "lucide-react";
 import React from "react";
 

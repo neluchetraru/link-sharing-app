@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import NavBar from "@/components/NavBar";
 import { cn } from "@/lib/utils";
-import { ConfigurationContextProvider } from "@/providers/Configuration";
 import Providers from "@/components/Providers";
 import { Toaster } from "@/components/ui/toaster";
 
@@ -23,11 +21,8 @@ export default function RootLayout({
     <html lang="en">
       <body className={cn(inter.className, "")}>
         <Providers>
-          <ConfigurationContextProvider>
-            <NavBar className="m-4 p-4 shadow-elevated rounded-md" />
-            {children}
-            <Toaster />
-          </ConfigurationContextProvider>
+          {children}
+          <Toaster />
         </Providers>
       </body>
     </html>
