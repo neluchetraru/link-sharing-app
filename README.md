@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Link-sharing app - share your social media links with the world!
 
-## Getting Started
+This is my solution to the [Link-sharing app Challenge](https://www.frontendmentor.io/challenges/linksharing-app-Fbt7yweGsT) from [Frontend Mentor](https://www.frontendmentor.io).
 
-First, run the development server:
+The application was created using [Next.js](https://nextjs.org/), bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+
+## Demo
+
+You can try the application [here](https://todo.com), or run it [locally](#getting-started).
+
+## Features
+
+- Complete link sharing app built with NextJs 14
+- Share social media links with others
+- Clean, modern UI on top of shadcn-ui
+- Authentication using [Kinde](https://kinde.com/)
+- 100% type safety achieved with TypeScript
+- Picture upload using [uploadthing](https://uploadthing.com/)
+- Handling forms with [@tanstack/react-query](https://tanstack.com/query/latest/docs/framework/react/installation)
+
+## Getting started
+
+To run this project locally, run
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+git clone https://github.com/neluchetraru/link-sharing-app.git
+cd link-sharing-app
+pnpm i
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+It is neccessary to copy *.env.sample* file into *.env.local* before running the application locally, then fill in the necessary variables with your own.
+The website will now run on ```http://localhost:3000```.
