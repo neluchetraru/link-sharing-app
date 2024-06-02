@@ -73,3 +73,38 @@ export const getUserData = async (user: KindeUser | undefined) => {
         }))
     } as PreviewType;
 }
+
+export const getUserDataByShareId = async (shareId: string) => {
+    if (!shareId) {
+        throw new Error("Invalid user data")
+    }
+    const dbUser = await db.user.findFirst({
+        where: {
+            shareId
+        },
+    });
+
+    if (!dbUser) {
+        throw new Error("User not found")
+    }
+
+    const userLinks = await db.link.findMany({
+        where: {
+            userId: dbUser.id
+        }
+    });
+
+    return {
+        account: {
+            id: dbUser.id,
+            email: dbUser.email,
+            name: dbUser.name,
+            picture: dbUser.picture,
+            shareId: dbUser.shareId
+        },
+        links: userLinks.map(link => ({
+            platform: link.link,
+            profile: link.profile
+        }))
+    } as PreviewType;
+}

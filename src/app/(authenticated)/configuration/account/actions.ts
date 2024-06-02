@@ -11,7 +11,7 @@ export const saveAccount = async (userId: string, account: AccountFormValues) =>
         data: {
             name: account.name,
             email: account.email,
-            picture: account.avatar,
+            picture: account.picture,
         }
     });
 }

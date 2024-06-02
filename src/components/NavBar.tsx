@@ -2,6 +2,7 @@
 
 import Logo from "@/components/Logo";
 import { buttonVariants } from "@/components/ui/button";
+import { usePreview } from "@/hooks/usePreview";
 import { cn } from "@/lib/utils";
 import { CircleUser, Eye, LucideLink } from "lucide-react";
 import Link from "next/link";
@@ -13,7 +14,7 @@ interface NavBarProps {
 }
 const NavBar = ({ className }: NavBarProps) => {
   const pathName = usePathname();
-
+  const { preview } = usePreview();
   return (
     <div
       className={cn(" bg-white flex items-center justify-between", className)}
@@ -55,7 +56,7 @@ const NavBar = ({ className }: NavBarProps) => {
       </div>
 
       <Link
-        href="/preview"
+        href={`/preview?id=${preview?.account?.shareId}`}
         className={cn(
           "flex items-center gap-x-1 text-gray-600",
           buttonVariants({

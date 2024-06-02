@@ -241,9 +241,9 @@ const Page = () => {
                         <FormLabel className="text-xs text-gray-600">
                           Link
                         </FormLabel>
-                        <div className="relative w-full flex items-center text-gray-600 border-gray-300 bg-white rounded-md">
+                        <div className="relative w-full flex flex-nowrap items-center text-gray-600 border-gray-300 bg-white rounded-md">
                           <LinkIcon className="mx-4 shrink-0" size={14} />
-                          <Label className="text-sm">
+                          <Label className="text-sm w-full flex-1 whitespace-nowrap">
                             {
                               PLATFORMS.filter(
                                 (platform) =>
