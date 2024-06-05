@@ -4,8 +4,11 @@ import { usePreview } from "@/hooks/usePreview";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/types";
 import { useQuery } from "@tanstack/react-query";
+import { Loader, Loader2 } from "lucide-react";
 import React, { useEffect } from "react";
 
+// bg-instagram bg-facebook bg-tiktok bg-github bg-linkedin bg-youtube bg-tiktok
+// text-instagram text-facebook text-tiktok text-github text-linkedin text-youtube text-tiktok
 const Layout = ({
   children,
 }: Readonly<{
@@ -26,7 +29,11 @@ const Layout = ({
     }
   }, [account, setPreview, isError]);
 
-  if (isLoading || isError) {
+  if (isLoading) {
+    return <Loader2 className="mx-auto mt-10 animate-spin" size={30} />;
+  }
+
+  if (isError) {
     return null;
   }
   return (

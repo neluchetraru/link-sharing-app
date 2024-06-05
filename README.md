@@ -6,7 +6,7 @@ The application was created using [Next.js](https://nextjs.org/), bootstrapped w
 
 ## Demo
 
-You can try the application [here](https://todo.com), or run it [locally](#getting-started).
+You can try the application [here](https://link-sharing-app-jade.vercel.app), or run it [locally](#getting-started).
 
 ## Features
 
@@ -30,4 +30,9 @@ pnpm dev
 ```
 
 It is neccessary to copy *.env.sample* file into *.env.local* before running the application locally, then fill in the necessary variables with your own.
-The website will now run on ```http://localhost:3000```.
+The website will now run on ```http://localhost:3000```
+
+
+## To Do
+
+- [ ] Landing Page :)

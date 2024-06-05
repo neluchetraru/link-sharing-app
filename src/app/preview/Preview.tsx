@@ -52,7 +52,7 @@ const Preview = ({ preview }: { preview: PreviewType }) => {
               href={`${platform.start}${link.profile}`}
               target="_blank"
               className={cn(
-                `bg-${platform.tw}`,
+                `bg-${platform.value}`,
                 "group flex items-center justify-between rounded-lg w-full text-white py-3 px-2 hover:bg-opacity-90 transition-all"
               )}
               key={platform.value}

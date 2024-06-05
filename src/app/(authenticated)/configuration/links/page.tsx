@@ -37,9 +37,6 @@ import { getUserData } from "@/app/auth-callback/actions";
 import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/types";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
-// bg-red-500 bg-blue-600 bg-teal-400 bg-gray-800 bg-blue-700 bg-red-600
-// text-red-500 text-blue-600 text-teal-400 text-gray-800 text-blue-700 text-red-600
-
 const linksFormSchema = z.object({
   links: z.array(
     z.object({

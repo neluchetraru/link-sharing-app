@@ -58,8 +58,8 @@ const PhonePreview = ({ className }: PhonePreviewProps) => {
                     href={`${platform.start}${link.profile}`}
                     target="_blank"
                     className={cn(
-                      `bg-${platform.tw}`,
-                      "flex items-center gap-x-2 rounded-lg w-full text-white py-1 px-2"
+                      `bg-${platform.value}`,
+                      "flex items-center gap-x-2 rounded-lg w-full text-white py-1 px-2 hover:bg-opacity-90 transition-all"
                     )}
                     key={platform.value}
                   >

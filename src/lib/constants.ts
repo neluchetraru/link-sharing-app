@@ -20,7 +20,6 @@ export const PLATFORMS = [
         label: "Instagram",
         value: "instagram",
         start: "https://instagram.com/",
-        tw: "red-500",
         icon: Icons.instagram,
     },
     {
@@ -28,34 +27,29 @@ export const PLATFORMS = [
         value: "facebook",
         start: "https://facebook.com/",
         icon: Icons.facebook,
-        tw: "blue-600",
     },
     {
         label: "TikTok",
         value: "tiktok",
         start: "https://tiktok.com/@",
         icon: Icons.tiktok,
-        tw: "teal-400",
     },
     {
         label: "GitHub",
         value: "github",
-        start: "https://github.copm/",
+        start: "https://github.com/",
         icon: Icons.github,
-        tw: "gray-800",
     },
     {
         label: "LinkedIn",
         value: "linkedin",
         start: "https://linkedin.com/in/",
         icon: Icons.linkedin,
-        tw: "blue-700",
     },
     {
         label: "YouTube",
         start: "https://youtube.com/channel/",
         value: "youtube",
         icon: Icons.youtube,
-        tw: "red-600",
     },
 ] as const;
